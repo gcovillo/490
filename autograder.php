@@ -21,7 +21,7 @@ for ($x = 0; $x <= $examLength; $x++) {
     //replace function name
     $lose = strstr($answer, ":");
     $badFunc = str_replace($lose, " ", $answer);
-    $goodFunc = $funcName; //need to find a way to incorportate function name for forrect question into here
+    $goodFunc = "def"." ".$funcName; //need to find a way to incorportate function name for forrect question into here
     $py = $goodFunc.$lose;
     $var_str = var_export($py, true);
     file_put_contents('qwerty.py', $var_str);
