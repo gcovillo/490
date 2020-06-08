@@ -1,11 +1,13 @@
 <?php
-$user = $_POST['user'];
+$user = $_POST['user'];  
+$examname = $_POST['examname'];
+
 
 //receive data from backend
-$url = "https://web.njit.edu/~sk2773/studentgrades.php"; 
+$url = "https://web.njit.edu/~sk2773/getfinalresults.php"; 
 $ch = curl_init($url);
 
-$userRequest = array('user' => $user);
+$userRequest = array('student' => $user, 'exam' => $examname);
 $postString = http_build_query($userRequest, '', '&');
 
 
@@ -17,4 +19,5 @@ $result = curl_exec($ch);
 curl_close($ch);
 
 echo $result
+
 ?>
