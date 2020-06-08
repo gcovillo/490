@@ -1,51 +1,33 @@
 <?php
-// receive question query from front end
-$topic = $_POST['topic'];
-$difficulty = $_POST['difficulty'];
-$keyword = $_POST['keyword'];
 
 
-//pacakage data and send to backend
-$url = "https://web.njit.edu/~sk2773/getquestions.php";  //need to get this link
+	$questionIDs = $_POST['questionIDs'];
+	$points = $_POST['points'];
 
 
-$ch = curl_init($url);
+	$examName = $_POST['examname'];
 
-//open connection
+	$reply = '1';
+	$i=0;
+	foreach($questionIDs as $value){
+    $url = "https://web.njit.edu/~sk2773/questiontoexam.php";
+	  $ch = curl_init($url);
 
-$query = array('topic' => $topic,'difficulty' => $difficulty, 'keyword' => $keyword);
-$postString = http_build_query($query, '', '&');
+	  $exam = array('questionID' => $questionIDs[$i],'examname' => $examName, 'points' => $points[$i]);
+	  $postString = http_build_query($exam, '', '&');
+	  curl_setopt($ch, CURLOPT_POST, 1);
+	  curl_setopt($ch, CURLOPT_POSTFIELDS, $postString);
+	  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	  $result = curl_exec($ch);
+	  curl_close($ch);
+	  $i = $i+1;
 
-//set options
-curl_setopt($ch, CURLOPT_POST, 1);
-curl_setopt($ch, CURLOPT_POSTFIELDS, $postString);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-$result = curl_exec($ch);
-curl_close($ch);
-
-echo $result;
-
-$QID = $_POST['QID'];
-$examName $_POST['examName'];
-
-$url = "https://web.njit.edu/~sk2773/addexam.php";  //need to get this link
-
-
-$ch = curl_init($url);
-
-//open connection
-
-$exam = array('QID' => $QID,'examName' => $examName,);
-$postString = http_build_query($exam, '', '&');
-
-//set options
-curl_setopt($ch, CURLOPT_POST, 1);
-curl_setopt($ch, CURLOPT_POSTFIELDS, $postString);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-$result = curl_exec($ch);
-curl_close($ch);
-
+	  $value = json_decode($result, true);
+		if($value['response'] != "200"){
+			$reply = '0';
+		}
+	}
+header('Content-Type: application/json');
+	echo json_encode(array('response'=>$reply));
 
 ?>
